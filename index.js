@@ -45,27 +45,77 @@ const plantSchema = new mongoose.Schema(
 
 )
 
+
 const plantModel = mongoose.model("plants", plantSchema);
 
-app.post('/api/register', (req, res) => {
+
+
+
+app.post('/api/register', async (req, res) => {
 
     const { username, name, email, password } = req.body;
-    const hashPassword = bcrypt.hash(password, 10)
-    const newUser = new usersModel({ username, name, email, hashPassword });
-    
 
-    newUser.save().then((user) => {
+    try {
 
-            res.status(201).send({ user });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        //salt makes it secure in the hash process "10 rounds of salt". A way to generate that hash for security. 
+      
+        const newUser = new usersModel({ username, name, email, password: hashedPassword });
+        
+        const user = await newUser.save();
 
-        }).catch((error) => {
+        res.status(201).send({ message: 'Successfully registered!', user });
 
-            console.error(error); 
+    } 
 
-            res.status(400).send({ message: 'Unable to add user!', error: error.message });
+    catch (error) {
 
-        });
+        console.error(error); 
+
+        res.status(400).send(error);
+    }
+
 });
+
+
+
+
+app.post('/api/login', async (req, res) => {
+
+     const { username, password } = req.body;
+
+    try {
+
+        const user = await usersModel.findOne({username});
+
+        if(!user){
+
+            return res.status(404).send("username not found")
+
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if(!isMatch){
+
+            return res.status(401).send("password incorrect, please try again!")
+
+        }
+
+        res.status(200).send(`Welcome back ${user.name}`)
+
+
+    } catch (error) {
+
+        console.log(error)
+
+        res.status(400).send(error)
+        
+    }
+});
+
+
+
 
 app.post('/api/users/:user_id/plants', (req, res) => {
 
@@ -90,9 +140,7 @@ app.post('/api/users/:user_id/plants', (req, res) => {
 
             res.status(200).send({plant})
 
-
         })
-
     })
 
     }).catch((error) => {
@@ -102,14 +150,16 @@ app.post('/api/users/:user_id/plants', (req, res) => {
         res.status(400).send(error)
 
     })
+});
 
-})
+
+
 
 app.listen(9000, () => {
 
     console.log("Listening on port 9000!!!!")
 
-})
+});
 
 
 
