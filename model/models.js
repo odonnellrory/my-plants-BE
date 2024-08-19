@@ -1,4 +1,4 @@
-const mongoose = require("../db/Collections");
+const mongoose = require("../db/collections");
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },

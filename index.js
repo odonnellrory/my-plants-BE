@@ -2,82 +2,62 @@ const express = require("express");
 
 const app = express();
 
-const { registerUser } = require("./controller/controllers.js");
+const { registerUser, loginUser, addPlant } = require("./controller/controllers.js");
 
 app.use(express.json());
 
 app.post("/api/register", registerUser);
 
-app.post("/api/login", async (req, res) => {
-  const { username, password } = req.body;
+app.post("/api/login", loginUser);
 
-  try {
-    const user = await usersModel.findOne({ username });
+app.post("/api/users/:user_id/plants", addPlant);
 
-    if (!user) {
-      return res.status(404).send("username not found");
-    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) {
-      return res.status(401).send("password incorrect, please try again!");
-    }
 
-    res.status(200).send(`Welcome back ${user.name}`);
-  } catch (error) {
-    console.log(error);
 
-    res.status(400).send(error);
-  }
-});
 
-app.post("/api/users/:user_id/plants", (req, res) => {
-  const { user_id } = req.params;
 
-  const {
-    plant_name,
-    plant_origin,
-    plant_type,
-    plant_cycle,
-    plant_description,
-    sunlight,
-    water,
-  } = req.body;
+//ERROR HANDLERS
 
-  const newPlant = new plantModel({
-    plant_name,
-    plant_origin,
-    plant_type,
-    plant_cycle,
-    plant_description,
-    sunlight,
-    water,
-  });
+app.use((err, req, res, next) => {
 
-  newPlant
-    .save()
-    .then((plant) => {
-      return usersModel.findById(user_id).then((user) => {
-        if (!user) {
-          return res.status(404).send({ message: "Sorry!" });
+    if (err.name === 'MongoServerError') {
+        switch (err.code) {
+            case 11000: 
+                res.status(409).send({ msg: 'Already exists!' });
+                break;
+            case 121:
+                res.status(400).send({ msg: 'Bad request, please check input.' });
+                break;
+            default:
+                res.status(500).send({ msg: 'A database error occurred. Please try again later.' });
+                break;
         }
-
-        user.plants.push(plant._id);
-        user.plant_count = user.plants.length;
-
-        return user.save().then(() => {
-          res.status(200).send({ plant });
-        });
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-
-      res.status(400).send(error);
-    });
+    } else if (err.status && err.msg) {
+    
+        res.status(err.status).send({ msg: err.msg });
+    } else {
+ 
+        next(err);
+    }
 });
+
+app.use((err, req, res, next) => {
+
+    console.log(err)
+
+    res.status(500).send({msg: "Internal server error."})
+
+})
+
+
+
 
 app.listen(9000, () => {
+
   console.log("Listening on port 9000!!!!");
+  
 });
+
+module.exports = app;
