@@ -1,5 +1,6 @@
 const { usersModel, plantModel } = require("../model/models");
 const bcrypt = require("bcrypt");
+const { plants } = require("../seed/plantData");
 
 const registerUser = (req, res, next) => {
   const { username, name, email, password } = req.body;
@@ -19,11 +20,14 @@ const registerUser = (req, res, next) => {
       res.status(201).send({ user });
     })
     .catch((err) => {
+
       next(err);
+
     });
 };
 
 const loginUser = async (req, res, next) => {
+
   const { username, password } = req.body;
 
   try {
@@ -40,10 +44,16 @@ const loginUser = async (req, res, next) => {
     }
 
     res.status(200).send({ user });
+
   } catch (error) {
+
     next(error);
+
   }
 };
+
+
+
 
 const addPlant = (req, res, next) => {
   const { username } = req.params;
@@ -85,8 +95,63 @@ const addPlant = (req, res, next) => {
       });
     })
     .catch((error) => {
+
       next(error);
+
     });
 };
 
-module.exports = { registerUser, loginUser, addPlant };
+
+
+
+const getPlants = (req, res, next) => {
+
+  const { username } = req.params;
+
+  usersModel.findOne({ username })
+  .populate("plants")
+  .then((user) => {
+
+    if (!user) {
+      return res.status(404).send("username not found");
+    }
+
+    if(user.plants.length === 0){
+      return res.status(200).send("No plants yet!")
+    }
+
+   res.status(200).send({plants: user.plants})
+
+  }).catch((err) => {
+
+    next(err)
+
+  })
+};
+
+
+
+
+const getUserInfo = (req, res, next) => {
+
+  const { username } = req.params;
+
+  usersModel.findOne({ username })
+  .then((user) => {
+
+    if (!user) {
+      return res.status(404).send("username not found");
+    }
+
+
+   res.status(200).send({ user })
+
+  }).catch((err) => {
+
+    next(err)
+
+  })
+};
+
+
+module.exports = { registerUser, loginUser, addPlant, getPlants, getUserInfo };

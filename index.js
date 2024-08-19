@@ -6,6 +6,8 @@ const {
   registerUser,
   loginUser,
   addPlant,
+  getPlants,
+  getUserInfo,
 } = require("./controller/controllers.js");
 
 app.use(express.json());
@@ -15,6 +17,11 @@ app.post("/api/register", registerUser);
 app.post("/api/login", loginUser);
 
 app.post("/api/users/:username/plants", addPlant);
+
+app.get("/api/users/:username", getUserInfo);
+
+app.get("/api/users/:username/plants", getPlants);
+
 
 //ERROR HANDLERS
 
@@ -35,13 +42,24 @@ app.use((err, req, res, next) => {
     }
   } else if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
-  } else {
+  }
+  else if(err.errors){
+
+    const message = err.errors.email.properties.message;
+
+    res.status(400).send(message);
+
+  }
+     else {
+
     next(err);
+
   }
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
+
+    console.log(err)
 
   res.status(500).send({ msg: "Internal server error." });
 });

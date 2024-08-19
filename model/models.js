@@ -1,9 +1,11 @@
 const mongoose = require("../db/collections");
 
+const regex = /^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/i
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, match: [regex, "Incorrect email format"] },
   reward_points: { type: Number, default: 0 },
   password: { type: String, required: true },
   profile_picture: {
