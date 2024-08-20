@@ -154,4 +154,41 @@ const getUserInfo = (req, res, next) => {
     });
 };
 
-module.exports = { registerUser, loginUser, addPlant, getPlants, getUserInfo };
+const deletePlant = (req, res, next) => {
+  const { username, plantId } = req.params;
+
+  usersModel
+    .findOne({ username })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      const plantIndex = user.plants.indexOf(plantId);
+      if (plantIndex === -1) {
+        return res.status(404).send("Plant not found in user's collection");
+      }
+
+      user.plants.splice(plantIndex, 1);
+      user.plant_count = user.plants.length;
+
+      return user
+        .save()
+        .then(() => plantModel.findByIdAndDelete(plantId))
+        .then(() => {
+          res.status(200).send({ message: "Plant deleted successfully" });
+        });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  addPlant,
+  getPlants,
+  getUserInfo,
+  deletePlant,
+};

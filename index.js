@@ -8,6 +8,7 @@ const {
   addPlant,
   getPlants,
   getUserInfo,
+  deletePlant,
 } = require("./controller/controllers.js");
 
 app.use(express.json());
@@ -21,6 +22,8 @@ app.post("/api/users/:username/plants", addPlant);
 app.get("/api/users/:username", getUserInfo);
 
 app.get("/api/users/:username/plants", getPlants);
+
+app.delete("api/users/:username/plants/:plantid", deletePlant);
 
 //delete
 //patch for watering dates
@@ -61,9 +64,7 @@ app.use((err, req, res, next) => {
 });
 
 // app.listen(9000, () => {
-
 //   console.log("Listening on port 9000!!!!");
-
 // });
 
 module.exports = app;
