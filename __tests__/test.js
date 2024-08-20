@@ -11,9 +11,9 @@ beforeAll(async () => {
   await seed();
 });
 
-// afterAll(async () => {
-//   mongoose.connection.close();
-// });
+afterAll(async () => {
+  mongoose.connection.close();
+});
 
 describe("USERS", () => {
   test("POST: Returns 201 status code, can successfully register as a new user", () => {
