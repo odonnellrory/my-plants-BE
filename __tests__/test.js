@@ -324,4 +324,20 @@ describe("DELETE /api/users/:username/plants/:plantId", () => {
     expect(updatedUser.plants).not.toContain(plant._id);
     expect(deletedPlant).toBeNull();
   });
+
+  test("Returns 404 if user is not found", async () => {
+    const response = await request(app)
+      .delete("/api/users/nonexistentuser/plants/someplantid")
+      .expect(404);
+
+    expect(response.text).toBe("User not found");
+  });
+
+  test("Returns 404 if plant is not in user's collection", async () => {
+    const response = await request(app)
+      .delete("/api/users/plantLover1/plants/nonexistentplantid")
+      .expect(404);
+
+    expect(response.text).toBe("Plant not found in user's collection");
+  });
 });
