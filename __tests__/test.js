@@ -11,9 +11,9 @@ beforeAll(async () => {
   await seed();
 });
 
-afterAll(async () => {
-  mongoose.connection.close();
-});
+// afterAll(async () => {
+//   mongoose.connection.close();
+// });
 
 describe("USERS", () => {
   test("POST: Returns 201 status code, can successfully register as a new user", () => {
@@ -280,38 +280,48 @@ describe("PLANTS", () => {
   });
 });
 
-describe("DELETE /api/users/:username/plants/:plant_id", () => {
-  test("should delete a plant and verify it no longer exists", async () => {
-    try {
-      const user = await usersModel.findOne({ username: "plantLover1" });
+describe("DELETE /api/users/:username/plants/:plantId", () => {
+  test("Successfully deletes a plant from user's collection", async () => {
+    // Add a plant
+    const user = await usersModel.findOne({ username: "plantLover1" });
+    const plant = await plantModel.create({
+      common_name: "Test Monstera",
+      plant_origin: "Test Central America",
+      scientific_name: ["Monstera deliciosa"],
+      type: "Indoor",
+      cycle: "Perennial",
+      description: "Monstera is known for its large, glossy, split leaves.",
+      sunlight: "Bright, indirect light",
+      watering: "Water when the top inch of soil is dry",
+      depth_of_water: "Moderate",
+      last_watered: "2024-08-18",
+      next_watering: "2024-08-25",
+      watering_general_benchmark: { min: "Weekly", max: "Biweekly" },
+      watering_period: "Weekly",
+      volume_water_requirement: { min: "500ml", max: "1L" },
+      pruning_month: ["March", "April"],
+      pruning_count: { times_per_year: 2 },
+      maintenance: "Low",
+      growth_rate: "Moderate",
+    });
 
-      const plant = await plantModel.create({
-        common_name: "Test Monstera",
-        plant_origin: "Test Central America",
-        scientific_name: ["Monstera deliciosa"],
-        type: "Indoor",
-        cycle: "Perennial",
-        description: "Monstera is known for its large, glossy, split leaves.",
-        sunlight: "Bright, indirect light",
-        watering: "Water when the top inch of soil is dry",
-      });
+    user.plants.push(plant._id);
+    await user.save();
 
-      user.plants.push(plant._id);
-      await user.save();
+    // Attempt to delete the plant
+    const response = await request(app)
+      .delete(`/api/users/plantLover1/plants/${plant._id}`)
+      .expect(200);
 
-      const response = await request(app)
-        .delete(`/api/users/plantLover1/plants/${plant._id}`)
-        .expect(200);
+    expect(response.body.message).toBe("Plant deleted successfully");
 
-      expect(response.body.message).toBe("Plant Deleted Successfully");
+    // Check if the plant is deleted
+    const [updatedUser, deletedPlant] = await Promise.all([
+      usersModel.findOne({ username: "plantLover1" }),
+      plantModel.findById(plant._id),
+    ]);
 
-      const updatedUser = await usersModel.findOne({ username: "plantLover1" });
-      const deletedPlant = await plantModel.findById(plant._id);
-
-      expect(updatedUser.plants).not.toContain(plant._id);
-      expect(deletedPlant).toBeNull();
-    } catch (error) {
-      throw error; // Rethrow the error to fail the test if something goes wrong
-    }
+    expect(updatedUser.plants).not.toContain(plant._id);
+    expect(deletedPlant).toBeNull();
   });
 });

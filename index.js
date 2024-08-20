@@ -23,7 +23,7 @@ app.get("/api/users/:username", getUserInfo);
 
 app.get("/api/users/:username/plants", getPlants);
 
-app.delete("api/users/:username/plants/:plantid", deletePlant);
+app.delete("/api/users/:username/plants/:plantId", deletePlant);
 
 //delete
 //patch for watering dates

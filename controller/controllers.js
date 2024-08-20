@@ -161,12 +161,12 @@ const deletePlant = (req, res, next) => {
     .findOne({ username })
     .then((user) => {
       if (!user) {
-        return res.status(404).send("User not found");
+        return res.status(500).send("User not found");
       }
 
       const plantIndex = user.plants.indexOf(plantId);
       if (plantIndex === -1) {
-        return res.status(404).send("Plant not found in user's collection");
+        return res.status(500).send("Plant not found in user's collection");
       }
 
       user.plants.splice(plantIndex, 1);
