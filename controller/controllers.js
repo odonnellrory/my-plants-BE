@@ -184,6 +184,33 @@ const deletePlant = (req, res, next) => {
     });
 };
 
+const updatePlantNickname = (req, res, next) => {
+  const { username, plantId } = req.params;
+  const { nickname } = req.body;
+
+  usersModel
+    .findOne({ username: username })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      return plantModel.findById(plantId);
+    })
+    .then((plant) => {
+      if (!plant) {
+        return res.status(404).send("Plant not found");
+      }
+
+      plant.nickname = nickname;
+      return plant.save();
+    })
+    .then(() => {
+      res.status(200).send("Plant updated successfully");
+    })
+    .catch(next);
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -191,4 +218,5 @@ module.exports = {
   getPlants,
   getUserInfo,
   deletePlant,
+  updatePlantNickname,
 };
