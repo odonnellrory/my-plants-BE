@@ -341,3 +341,63 @@ describe("DELETE /api/users/:username/plants/:plantId", () => {
     expect(response.text).toBe("Plant not found in user's collection");
   });
 });
+
+describe("PATCH /api/users/:username/plants/:plant_id", () => {
+  test("Successfully updates a plant's nickname in the user's collection", async () => {
+    const user = await usersModel.findOne({ username: "plantLover1" });
+
+    const plant = await plantModel.create({
+      common_name: "Peace Lily",
+      plant_origin: "Tropical Americas",
+      scientific_name: ["Spathiphyllum wallisii"],
+      type: "Indoor",
+      cycle: "Perennial",
+      description:
+        "Peace Lily is known for its white blooms and air-purifying qualities.",
+      sunlight: "Low to bright indirect light",
+      watering: "Keep the soil consistently moist",
+      depth_of_water: "Shallow",
+      last_watered: "2024-08-15",
+      next_watering: "2024-08-22",
+      watering_general_benchmark: { min: "Weekly", max: "Biweekly" },
+      watering_period: "Weekly",
+      volume_water_requirement: { min: "300ml", max: "500ml" },
+      pruning_month: ["April", "October"],
+      pruning_count: { times_per_year: 2 },
+      maintenance: "Moderate",
+      growth_rate: "Slow",
+    });
+
+    user.plants.push(plant._id);
+    await user.save();
+
+    const response = await request(app)
+      .patch(`/api/users/plantLover1/plants/${plant._id}`)
+      .send({ nickname: "My Lovely Lily" })
+      .expect(200);
+
+    expect(response.text).toBe("Plant updated successfully");
+
+    const updatedPlant = await plantModel.findById(plant._id);
+
+    expect(updatedPlant.nickname).toBe("My Lovely Lily");
+  });
+
+  test("Returns 404 if user is not found", async () => {
+    const response = await request(app)
+      .patch("/api/users/nonexistentuser/plants/someplantid")
+      .send({ nickname: "Nonexistent Nickname" })
+      .expect(404);
+    console.log(response.text);
+    expect(response.text).toBe("User not found");
+  });
+
+  test("Returns 404 if plant is not in user's collection", async () => {
+    const response = await request(app)
+      .patch("/api/users/plantLover1/plants/66c4999cc5fb78381f052b44")
+      .send({ nickname: "Nonexistent Nickname" })
+      .expect(404);
+
+    expect(response.text).toBe("Plant not found");
+  });
+});
