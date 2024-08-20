@@ -1,11 +1,16 @@
 const mongoose = require("../db/collections");
 
-const regex = /^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/i
+const regex = /^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/i;
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true, match: [regex, "Incorrect email format"] },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [regex, "Incorrect email format"],
+  },
   reward_points: { type: Number, default: 0 },
   password: { type: String, required: true },
   profile_picture: {
@@ -21,14 +26,26 @@ const usersModel = mongoose.model("user", userSchema);
 
 const plantSchema = new mongoose.Schema(
   {
-    plant_name: { type: String },
-    plant_origin: { type: String },
-    plant_type: { type: String },
-    plant_cycle: { type: String },
-    plant_description: { type: String },
+    nickname: { type: String, default: null },
+    common_name: { type: String, required: true },
+    plant_origin: { type: String, default: null },
+    scientific_name: { type: Array },
+    type: { type: String },
+    cycle: { type: String },
+    description: { type: String },
     sunlight: { type: String },
-    water: { type: String },
+    watering: { type: String },
     date_added: { type: Date, default: Date.now },
+    depth_of_water: { type: String },
+    last_watered: { type: Date, default: Date.now },
+    next_watering: { type: Date },
+    watering_general_benchmark: { type: Object },
+    watering_period: { type: String },
+    volume_water_requirement: { type: Object },
+    pruning_month: { type: Array },
+    pruning_count: { type: Object },
+    maintenance: { type: String },
+    growth_rate: { type: String },
   },
 
   { strict: false }

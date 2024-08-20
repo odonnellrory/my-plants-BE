@@ -1,6 +1,5 @@
 const { usersModel, plantModel } = require("../model/models");
 const bcrypt = require("bcrypt");
-const { plants } = require("../seed/plantData");
 
 const registerUser = (req, res, next) => {
   const { username, name, email, password } = req.body;
@@ -20,14 +19,11 @@ const registerUser = (req, res, next) => {
       res.status(201).send({ user });
     })
     .catch((err) => {
-
       next(err);
-
     });
 };
 
 const loginUser = async (req, res, next) => {
-
   const { username, password } = req.body;
 
   try {
@@ -44,38 +40,58 @@ const loginUser = async (req, res, next) => {
     }
 
     res.status(200).send({ user });
-
   } catch (error) {
-
     next(error);
-
   }
 };
-
-
-
 
 const addPlant = (req, res, next) => {
   const { username } = req.params;
 
   const {
-    plant_name,
+    nickname,
+    common_name,
     plant_origin,
-    plant_type,
-    plant_cycle,
-    plant_description,
+    scientific_name,
+    type,
+    cycle,
+    description,
     sunlight,
-    water,
+    watering,
+    date_added,
+    depth_of_water,
+    last_watered,
+    next_watering,
+    watering_general_benchmark,
+    watering_period,
+    volume_water_requirement,
+    pruning_month,
+    pruning_count,
+    maintenance,
+    growth_rate,
   } = req.body;
 
   const newPlant = new plantModel({
-    plant_name,
+    nickname,
+    common_name,
     plant_origin,
-    plant_type,
-    plant_cycle,
-    plant_description,
+    scientific_name,
+    type,
+    cycle,
+    description,
     sunlight,
-    water,
+    watering,
+    date_added,
+    depth_of_water,
+    last_watered,
+    next_watering,
+    watering_general_benchmark,
+    watering_period,
+    volume_water_requirement,
+    pruning_month,
+    pruning_count,
+    maintenance,
+    growth_rate,
   });
 
   newPlant
@@ -90,68 +106,52 @@ const addPlant = (req, res, next) => {
         user.plant_count = user.plants.length;
 
         return user.save().then(() => {
-          res.status(200).send({ plant });
+          res.status(201).send({ plant });
         });
       });
     })
     .catch((error) => {
-
       next(error);
-
     });
 };
 
-
-
-
 const getPlants = (req, res, next) => {
-
   const { username } = req.params;
 
-  usersModel.findOne({ username })
-  .populate("plants")
-  .then((user) => {
+  usersModel
+    .findOne({ username })
+    .populate("plants")
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("username not found");
+      }
 
-    if (!user) {
-      return res.status(404).send("username not found");
-    }
+      if (user.plants.length === 0) {
+        return res.status(200).send("No plants yet!");
+      }
 
-    if(user.plants.length === 0){
-      return res.status(200).send("No plants yet!")
-    }
-
-   res.status(200).send({plants: user.plants})
-
-  }).catch((err) => {
-
-    next(err)
-
-  })
+      res.status(200).send({ plants: user.plants });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
-
-
-
 
 const getUserInfo = (req, res, next) => {
-
   const { username } = req.params;
 
-  usersModel.findOne({ username })
-  .then((user) => {
+  usersModel
+    .findOne({ username })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("username not found");
+      }
 
-    if (!user) {
-      return res.status(404).send("username not found");
-    }
-
-
-   res.status(200).send({ user })
-
-  }).catch((err) => {
-
-    next(err)
-
-  })
+      res.status(200).send({ user });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
-
 
 module.exports = { registerUser, loginUser, addPlant, getPlants, getUserInfo };

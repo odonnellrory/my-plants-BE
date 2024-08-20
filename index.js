@@ -22,6 +22,9 @@ app.get("/api/users/:username", getUserInfo);
 
 app.get("/api/users/:username/plants", getPlants);
 
+//delete
+//patch for watering dates
+//patch for username reward count
 
 //ERROR HANDLERS
 
@@ -42,24 +45,17 @@ app.use((err, req, res, next) => {
     }
   } else if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
-  }
-  else if(err.errors){
-
+  } else if (err.errors) {
     const message = err.errors.email.properties.message;
 
     res.status(400).send(message);
-
-  }
-     else {
-
+  } else {
     next(err);
-
   }
 });
 
 app.use((err, req, res, next) => {
-
-    console.log(err)
+  console.log(err);
 
   res.status(500).send({ msg: "Internal server error." });
 });
