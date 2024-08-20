@@ -401,3 +401,65 @@ describe("PATCH /api/users/:username/plants/:plant_id", () => {
     expect(response.text).toBe("Plant not found");
   });
 });
+
+describe("PATCH /api/users/:currentUsername", () => {
+  test("Successfully updates a user's username", () => {
+    return request(app)
+      .patch("/api/users/plantLover1")
+      .send({ newUsername: "plantLover1Updated" })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.message).toBe("Username updated successfully");
+        expect(body.user.username).toBe("plantLover1Updated");
+      });
+  });
+
+  test("Returns 409 when trying to update to an existing username", () => {
+    return request(app)
+      .patch("/api/users/greenThumb")
+      .send({ newUsername: "botanicalBoss" })
+      .expect(409)
+      .then(({ body }) => {
+        expect(body.message).toBe("Username already exists");
+      });
+  });
+
+  test("Returns 404 when trying to update a non-existent user", () => {
+    return request(app)
+      .patch("/api/users/nonExistentUser")
+      .send({ newUsername: "newUsername" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.message).toBe("User not found");
+      });
+  });
+
+  test("Ensures the old username no longer exists after update", async () => {
+    await request(app)
+      .patch("/api/users/leafLover")
+      .send({ newUsername: "leafLoverUpdated" })
+      .expect(200);
+
+    return request(app)
+      .get("/api/users/leafLover")
+      .expect(404)
+      .then((response) => {
+        expect(response.text).toBe("username not found");
+      });
+  });
+
+  test("Ensures the user's plants are still associated after username update", async () => {
+    const user = await usersModel.findOne({ username: "flowerFanatic" });
+    const originalPlantCount = user.plants.length;
+
+    await request(app)
+      .patch("/api/users/flowerFanatic")
+      .send({ newUsername: "flowerFanaticUpdated" })
+      .expect(200);
+
+    const updatedUser = await usersModel.findOne({
+      username: "flowerFanaticUpdated",
+    });
+    expect(updatedUser.plants.length).toBe(originalPlantCount);
+  });
+});

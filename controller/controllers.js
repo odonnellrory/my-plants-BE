@@ -19,7 +19,12 @@ const registerUser = (req, res, next) => {
       res.status(201).send({ user });
     })
     .catch((err) => {
-      next(err);
+      if (err.code === 11000) {
+        // Duplicate key error
+        res.status(409).send({ msg: "Already exists!" });
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -142,6 +147,7 @@ const getUserInfo = (req, res, next) => {
 
   usersModel
     .findOne({ username })
+    .lean()
     .then((user) => {
       if (!user) {
         return res.status(404).send("username not found");
@@ -153,7 +159,6 @@ const getUserInfo = (req, res, next) => {
       next(err);
     });
 };
-
 const deletePlant = (req, res, next) => {
   const { username, plantId } = req.params;
 
@@ -195,20 +200,51 @@ const updatePlantNickname = (req, res, next) => {
         return res.status(404).send("User not found");
       }
 
-      return plantModel.findById(plantId);
+      return plantModel.findByIdAndUpdate(
+        plantId,
+        { nickname: nickname },
+        { new: true }
+      );
     })
     .then((plant) => {
       if (!plant) {
         return res.status(404).send("Plant not found");
       }
-
-      plant.nickname = nickname;
-      return plant.save();
-    })
-    .then(() => {
       res.status(200).send("Plant updated successfully");
     })
     .catch(next);
+};
+
+const updateUsername = (req, res, next) => {
+  const { currentUsername } = req.params;
+  const { newUsername } = req.body;
+
+  // Check if the new username already exists
+  usersModel
+    .findOne({ username: newUsername })
+    .then((existingUser) => {
+      if (existingUser) {
+        return res.status(409).send({ message: "Username already exists" });
+      }
+
+      // Find and update the user
+      return usersModel.findOneAndUpdate(
+        { username: currentUsername },
+        { username: newUsername },
+        { new: true }
+      );
+    })
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).send({ message: "User not found" });
+      }
+      res
+        .status(200)
+        .send({ message: "Username updated successfully", user: updatedUser });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 module.exports = {
@@ -219,4 +255,5 @@ module.exports = {
   getUserInfo,
   deletePlant,
   updatePlantNickname,
+  updateUsername,
 };

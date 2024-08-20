@@ -10,6 +10,7 @@ const {
   getUserInfo,
   deletePlant,
   updatePlantNickname,
+  updateUsername,
 } = require("./controller/controllers.js");
 
 app.use(express.json());
@@ -27,6 +28,8 @@ app.get("/api/users/:username/plants", getPlants);
 app.delete("/api/users/:username/plants/:plantId", deletePlant);
 
 app.patch("/api/users/:username/plants/:plantId", updatePlantNickname);
+
+app.patch("/api/users/:currentUsername", updateUsername);
 //delete
 //patch for watering dates
 //patch for username reward count
