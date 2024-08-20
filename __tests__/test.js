@@ -280,65 +280,38 @@ describe("PLANTS", () => {
   });
 });
 
-describe("DELETE /api/users/:username/plants/:plantId", () => {
-  test("Successfully deletes a plant from user's collection", () => {
-    // add a plant
-    // attempt to delete that plant
-    // check if that plant is still there
+describe("DELETE /api/users/:username/plants/:plant_id", () => {
+  test("should delete a plant and verify it no longer exists", async () => {
+    try {
+      const user = await usersModel.findOne({ username: "plantLover1" });
 
-    usersModel
-      .findOne({ username: "plantLover1" })
-      // add plant
-      .then((user) => {
-        return plantModel
-          .create({
-            common_name: "Test Monstera",
-            plant_origin: "Test Central America",
-            scientific_name: ["Monstera deliciosa"],
-            type: "Indoor",
-            cycle: "Perennial",
-            description:
-              "Monstera is known for its large, glossy, split leaves.",
-            sunlight: "Bright, indirect light",
-            watering: "Water when the top inch of soil is dry",
-            depth_of_water: "Moderate",
-            last_watered: "2024-08-18",
-            next_watering: "2024-08-25",
-            watering_general_benchmark: { min: "Weekly", max: "Biweekly" },
-            watering_period: "Weekly",
-            volume_water_requirement: { min: "500ml", max: "1L" },
-            pruning_month: ["March", "April"],
-            pruning_count: { times_per_year: 2 },
-            maintenance: "Low",
-            growth_rate: "Moderate",
-          })
-          .then((plant) => {
-            users.plants.push(plant._id);
-            return user.save().then(() => plant);
-          });
-      })
-      // delete plant
-      .then((plant) => {
-        return request(app)
-          .delete(`/api/users/plantLover1/plants/${plant._id}`)
-          .expect(200)
-          .then((response) => {
-            expect(response.body.message).toBe("Plant Deleted Successfully");
-            return plant._id;
-          });
-      })
-      // check its deleted
-      .then((plantId) => {
-        return Promise.all([
-          usersModel.findOne({ username: "plantLover1" }),
-          plantModel.findById(plantId),
-        ]);
-      })
-      .then(([user, deletedPlant]) => {
-        expect(user.plants).not.toContain(deletedPlant._id);
-        expect(deletedPlant).toBeNull();
-        done();
-      })
-      .catch(done);
+      const plant = await plantModel.create({
+        common_name: "Test Monstera",
+        plant_origin: "Test Central America",
+        scientific_name: ["Monstera deliciosa"],
+        type: "Indoor",
+        cycle: "Perennial",
+        description: "Monstera is known for its large, glossy, split leaves.",
+        sunlight: "Bright, indirect light",
+        watering: "Water when the top inch of soil is dry",
+      });
+
+      user.plants.push(plant._id);
+      await user.save();
+
+      const response = await request(app)
+        .delete(`/api/users/plantLover1/plants/${plant._id}`)
+        .expect(200);
+
+      expect(response.body.message).toBe("Plant Deleted Successfully");
+
+      const updatedUser = await usersModel.findOne({ username: "plantLover1" });
+      const deletedPlant = await plantModel.findById(plant._id);
+
+      expect(updatedUser.plants).not.toContain(plant._id);
+      expect(deletedPlant).toBeNull();
+    } catch (error) {
+      throw error; // Rethrow the error to fail the test if something goes wrong
+    }
   });
 });
