@@ -46,6 +46,11 @@ const plantSchema = new mongoose.Schema(
     pruning_count: { type: Object },
     maintenance: { type: String },
     growth_rate: { type: String },
+    img_ur: {
+      type: String,
+      default:
+        "https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
+    },
   },
 
   { strict: false }
