@@ -20,7 +20,6 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        // Duplicate key error
         res.status(409).send({ msg: "Already exists!" });
       } else {
         next(err);
@@ -67,6 +66,7 @@ const addPlant = (req, res, next) => {
     pruning_care_guide,
     last_watered,
     next_watering,
+    image_url,
   } = req.body;
 
   const newPlant = new plantModel({
@@ -84,6 +84,7 @@ const addPlant = (req, res, next) => {
     pruning_care_guide,
     last_watered,
     next_watering,
+    image_url,
   });
 
   newPlant
