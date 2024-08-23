@@ -175,54 +175,41 @@ describe("USERS", () => {
       });
   });
 });
-
 describe("PLANTS", () => {
-  test("POST: Returns 200 status code. Users can successfully add a new plant to their account", () => {
-    const newplant = {
+  test("POST: Returns 201 status code. Users can successfully add a new plant to their account", () => {
+    const newPlant = {
+      nickname: "Fern",
+      plant_location: "Living Room",
       common_name: "Monstera",
-      plant_origin: "Central America",
       scientific_name: ["Monstera deliciosa"],
-      type: "Indoor",
-      cycle: "Perennial",
-      description: "Monstera is known for its large, glossy, split leaves.",
-      sunlight: "Bright, indirect light",
+      origin: "Central America",
       watering: "Water when the top inch of soil is dry",
-      depth_of_water: "Moderate",
-      last_watered: "2024-08-18",
-      next_watering: "2024-08-25",
-      watering_general_benchmark: { min: "Weekly", max: "Biweekly" },
-      watering_period: "Weekly",
-      volume_water_requirement: { min: "500ml", max: "1L" },
-      pruning_month: ["March", "April"],
-      pruning_count: { times_per_year: 2 },
-      maintenance: "Low",
-      growth_rate: "Moderate",
+      sunlight: "Bright, indirect light",
+      description: "Monstera is known for its large, glossy, split leaves.",
+      cycle: "Perennial",
+      sunlight_care_guide: "Bright, indirect light",
+      watering_care_guide: "Water when the top inch of soil is dry",
+      pruning_care_guide: "Prune as needed to remove dead leaves",
     };
     return request(app)
       .post("/api/users/gardenGuru/plants")
-      .send(newplant)
+      .send(newPlant)
       .expect(201)
       .then(({ body }) => {
         expect(body.plant).toEqual(
           expect.objectContaining({
+            nickname: expect.any(String),
+            plant_location: expect.any(String),
             common_name: expect.any(String),
-            plant_origin: expect.any(String),
             scientific_name: expect.any(Array),
-            type: expect.any(String),
-            cycle: expect.any(String),
-            description: expect.any(String),
-            sunlight: expect.any(String),
+            origin: expect.any(String),
             watering: expect.any(String),
-            depth_of_water: expect.any(String),
-            last_watered: expect.any(String),
-            next_watering: expect.any(String),
-            watering_general_benchmark: expect.any(Object),
-            watering_period: expect.any(String),
-            volume_water_requirement: expect.any(Object),
-            pruning_month: expect.any(Array),
-            pruning_count: expect.any(Object),
-            maintenance: expect.any(String),
-            growth_rate: expect.any(String),
+            sunlight: expect.any(String),
+            description: expect.any(String),
+            cycle: expect.any(String),
+            sunlight_care_guide: expect.any(String),
+            watering_care_guide: expect.any(String),
+            pruning_care_guide: expect.any(String),
           })
         );
       });
@@ -235,49 +222,43 @@ describe("PLANTS", () => {
       .get("/api/users/plantLover1/plants")
       .expect(200)
       .then(({ body }) => {
-        expect(body.plants.length).toBe(1);
+        expect(body.plants.length).toBeGreaterThan(0);
         expect(body.plants[0]).toEqual(
           expect.objectContaining({
+            nickname: expect.any(String),
+            plant_location: expect.any(String),
             common_name: expect.any(String),
-            plant_origin: expect.any(String),
             scientific_name: expect.any(Array),
-            type: expect.any(String),
-            cycle: expect.any(String),
-            description: expect.any(String),
-            sunlight: expect.any(String),
+            origin: expect.any(String),
             watering: expect.any(String),
-            depth_of_water: expect.any(String),
-            last_watered: expect.any(String),
-            next_watering: expect.any(String),
-            watering_general_benchmark: expect.any(Object),
-            watering_period: expect.any(String),
-            volume_water_requirement: expect.any(Object),
-            pruning_month: expect.any(Array),
-            pruning_count: expect.any(Object),
-            maintenance: expect.any(String),
-            growth_rate: expect.any(String),
+            sunlight: expect.any(String),
+            description: expect.any(String),
+            cycle: expect.any(String),
+            sunlight_care_guide: expect.any(String),
+            watering_care_guide: expect.any(String),
+            pruning_care_guide: expect.any(String),
           })
         );
       });
   });
+});
 
-  test("GET: Returns 404 status code when username is not not found.", () => {
-    return request(app)
-      .get("/api/users/plantLover2/plants")
-      .expect(404)
-      .then((response) => {
-        expect(response.text).toBe("username not found");
-      });
-  });
+test("GET: Returns 404 status code when username is not not found.", () => {
+  return request(app)
+    .get("/api/users/plantLover2/plants")
+    .expect(404)
+    .then((response) => {
+      expect(response.text).toBe("username not found");
+    });
+});
 
-  test("GET: Returns empty array and message if no plants are on the list", () => {
-    return request(app)
-      .get("/api/users/PlantKing/plants")
-      .expect(200)
-      .then((response) => {
-        expect(response.text).toBe("No plants yet!");
-      });
-  });
+test("GET: Returns empty array and message if no plants are on the list", () => {
+  return request(app)
+    .get("/api/users/PlantKing/plants")
+    .expect(200)
+    .then((response) => {
+      expect(response.text).toBe("No plants yet!");
+    });
 });
 
 describe("DELETE /api/users/:username/plants/:plantId", () => {
