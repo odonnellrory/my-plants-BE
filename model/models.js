@@ -27,33 +27,24 @@ const usersModel = mongoose.model("user", userSchema);
 const plantSchema = new mongoose.Schema(
   {
     nickname: { type: String, default: null },
+    plant_location: { type: String, default: null },
     common_name: { type: String, required: true },
-    plant_origin: { type: String, default: null },
     scientific_name: { type: Array },
-    type: { type: String },
-    cycle: { type: String },
-    description: { type: String },
-    sunlight: { type: String },
+    origin: { type: String, default: null },
     watering: { type: String },
-    date_added: { type: Date, default: Date.now },
-    depth_of_water: { type: String },
-    last_watered: { type: Date, default: Date.now },
-    next_watering: { type: Date },
-    watering_general_benchmark: { type: Object },
-    watering_period: { type: String },
-    volume_water_requirement: { type: Object },
-    pruning_month: { type: Array },
-    pruning_count: { type: Object },
-    maintenance: { type: String },
-    growth_rate: { type: String },
-    img_ur: {
+    sunlight: { type: String },
+    description: { type: String },
+    cycle: { type: String },
+    sunlight_care_guide: { type: String, default: null },
+    watering_care_guide: { type: String, default: null },
+    pruning_care_guide: { type: String, default: null },
+    image_url: {
       type: String,
       default:
         "https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
     },
   },
-
-  { strict: false }
+  { strict: true }
 );
 
 const plantModel = mongoose.model("plants", plantSchema);
