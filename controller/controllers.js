@@ -49,7 +49,6 @@ const loginUser = async (req, res, next) => {
     next(error);
   }
 };
-
 const addPlant = (req, res, next) => {
   const { username } = req.params;
 
@@ -66,6 +65,8 @@ const addPlant = (req, res, next) => {
     sunlight_care_guide,
     watering_care_guide,
     pruning_care_guide,
+    last_watered,
+    next_watering,
   } = req.body;
 
   const newPlant = new plantModel({
@@ -81,6 +82,8 @@ const addPlant = (req, res, next) => {
     sunlight_care_guide,
     watering_care_guide,
     pruning_care_guide,
+    last_watered,
+    next_watering,
   });
 
   newPlant
@@ -88,7 +91,7 @@ const addPlant = (req, res, next) => {
     .then((plant) => {
       return usersModel.findOne({ username }).then((user) => {
         if (!user) {
-          return res.status(404).send({ message: "username not found!" });
+          return res.status(404).send({ message: "Username not found!" });
         }
 
         user.plants.push(plant._id);

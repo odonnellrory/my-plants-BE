@@ -190,7 +190,10 @@ describe("PLANTS", () => {
       sunlight_care_guide: "Bright, indirect light",
       watering_care_guide: "Water when the top inch of soil is dry",
       pruning_care_guide: "Prune as needed to remove dead leaves",
+      last_watered: "2024-08-18T00:00:00.000Z", // Example date in ISO format
+      next_watering: "2024-08-25T00:00:00.000Z", // Example date in ISO format
     };
+
     return request(app)
       .post("/api/users/gardenGuru/plants")
       .send(newPlant)
@@ -210,6 +213,9 @@ describe("PLANTS", () => {
             sunlight_care_guide: expect.any(String),
             watering_care_guide: expect.any(String),
             pruning_care_guide: expect.any(String),
+            date_added: expect.any(String),
+            last_watered: expect.any(String),
+            next_watering: expect.any(String),
           })
         );
       });
@@ -267,23 +273,15 @@ describe("DELETE /api/users/:username/plants/:plantId", () => {
     const user = await usersModel.findOne({ username: "plantLover1" });
     const plant = await plantModel.create({
       common_name: "Test Monstera",
-      plant_origin: "Test Central America",
       scientific_name: ["Monstera deliciosa"],
-      type: "Indoor",
+      origin: "Test Central America",
       cycle: "Perennial",
       description: "Monstera is known for its large, glossy, split leaves.",
       sunlight: "Bright, indirect light",
       watering: "Water when the top inch of soil is dry",
-      depth_of_water: "Moderate",
-      last_watered: "2024-08-18",
-      next_watering: "2024-08-25",
-      watering_general_benchmark: { min: "Weekly", max: "Biweekly" },
-      watering_period: "Weekly",
-      volume_water_requirement: { min: "500ml", max: "1L" },
-      pruning_month: ["March", "April"],
-      pruning_count: { times_per_year: 2 },
-      maintenance: "Low",
-      growth_rate: "Moderate",
+      sunlight_care_guide: "Bright, indirect light",
+      watering_care_guide: "Water when the top inch of soil is dry",
+      pruning_care_guide: "Prune as needed to remove dead leaves",
     });
 
     user.plants.push(plant._id);
@@ -329,24 +327,16 @@ describe("PATCH /api/users/:username/plants/:plant_id", () => {
 
     const plant = await plantModel.create({
       common_name: "Peace Lily",
-      plant_origin: "Tropical Americas",
       scientific_name: ["Spathiphyllum wallisii"],
-      type: "Indoor",
+      origin: "Tropical Americas",
       cycle: "Perennial",
       description:
         "Peace Lily is known for its white blooms and air-purifying qualities.",
       sunlight: "Low to bright indirect light",
       watering: "Keep the soil consistently moist",
-      depth_of_water: "Shallow",
-      last_watered: "2024-08-15",
-      next_watering: "2024-08-22",
-      watering_general_benchmark: { min: "Weekly", max: "Biweekly" },
-      watering_period: "Weekly",
-      volume_water_requirement: { min: "300ml", max: "500ml" },
-      pruning_month: ["April", "October"],
-      pruning_count: { times_per_year: 2 },
-      maintenance: "Moderate",
-      growth_rate: "Slow",
+      sunlight_care_guide: "Low to bright indirect light",
+      watering_care_guide: "Keep the soil consistently moist",
+      pruning_care_guide: "Prune as needed to remove dead leaves",
     });
 
     user.plants.push(plant._id);

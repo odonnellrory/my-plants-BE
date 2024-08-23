@@ -14,6 +14,9 @@ const plants = [
       "Allow the top inch of soil to dry out between waterings.",
     pruning_care_guide:
       "Prune dead or yellowing leaves as needed to encourage growth.",
+    date_added: new Date("2024-08-01"),
+    last_watered: new Date("2024-08-18"),
+    next_watering: new Date("2024-08-25"),
   },
   {
     nickname: "Snaky",
@@ -30,6 +33,9 @@ const plants = [
       "Tolerates low light but thrives in bright, indirect light.",
     watering_care_guide: "Water sparingly and ensure the soil is well-drained.",
     pruning_care_guide: "Remove damaged leaves to keep the plant healthy.",
+    date_added: new Date("2024-08-02"),
+    last_watered: new Date("2024-08-16"),
+    next_watering: new Date("2024-08-23"),
   },
   {
     nickname: "Vera",
@@ -46,6 +52,9 @@ const plants = [
     watering_care_guide:
       "Water thoroughly but infrequently, allowing the soil to dry out completely.",
     pruning_care_guide: "Prune older leaves to encourage new growth.",
+    date_added: new Date("2024-08-03"),
+    last_watered: new Date("2024-08-17"),
+    next_watering: new Date("2024-08-24"),
   },
   {
     nickname: "Spidey",
@@ -63,6 +72,9 @@ const plants = [
       "Keep the soil slightly moist, allowing it to dry out between waterings.",
     pruning_care_guide:
       "Trim off dead tips or leaves to maintain its appearance.",
+    date_added: new Date("2024-08-04"),
+    last_watered: new Date("2024-08-19"),
+    next_watering: new Date("2024-08-26"),
   },
   {
     nickname: "Fiddle",
@@ -80,6 +92,9 @@ const plants = [
     watering_care_guide:
       "Keep soil moist but not waterlogged; water when the top inch of soil is dry.",
     pruning_care_guide: "Prune to shape and remove dead or unhealthy leaves.",
+    date_added: new Date("2024-08-05"),
+    last_watered: new Date("2024-08-20"),
+    next_watering: new Date("2024-08-27"),
   },
   {
     nickname: "Peace",
@@ -98,6 +113,9 @@ const plants = [
       "Keep the soil consistently moist, but avoid overwatering.",
     pruning_care_guide:
       "Remove spent blooms and yellowing leaves to encourage new growth.",
+    date_added: new Date("2024-08-06"),
+    last_watered: new Date("2024-08-21"),
+    next_watering: new Date("2024-08-28"),
   },
   {
     nickname: "ZeeZee",
@@ -115,6 +133,9 @@ const plants = [
     watering_care_guide:
       "Water sparingly, allowing the soil to dry out completely between waterings.",
     pruning_care_guide: "Prune occasionally to remove yellowing leaves.",
+    date_added: new Date("2024-08-07"),
+    last_watered: new Date("2024-08-22"),
+    next_watering: new Date("2024-08-29"),
   },
 ];
 

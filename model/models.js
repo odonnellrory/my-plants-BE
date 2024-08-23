@@ -43,6 +43,9 @@ const plantSchema = new mongoose.Schema(
       default:
         "https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
     },
+    date_added: { type: Date, default: Date.now },
+    last_watered: { type: Date },
+    next_watering: { type: Date },
   },
   { strict: true }
 );
