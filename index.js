@@ -10,11 +10,9 @@ const {
   deletePlant,
   updatePlantNickname,
   updateUsername,
-  getAllEndpoints
+  getAllEndpoints,
+  getPlant,
 } = require("./controller/controllers.js");
-
-
-
 
 app.use(cors());
 
@@ -28,6 +26,8 @@ app.post("/api/login", loginUser);
 
 app.post("/api/users/:username/plants", addPlant);
 
+app.get("/api/users/:username/plants/:plantId", getPlant);
+
 app.get("/api/users/:username", getUserInfo);
 
 app.get("/api/users/:username/plants", getPlants);
@@ -37,9 +37,6 @@ app.delete("/api/users/:username/plants/:plantId", deletePlant);
 app.patch("/api/users/:username/plants/:plantId", updatePlantNickname);
 
 app.patch("/api/users/:currentUsername", updateUsername);
-
-
-
 
 //ERROR HANDLERS
 
@@ -58,17 +55,13 @@ app.use((err, req, res, next) => {
           .send({ msg: "A database error occurred. Please try again later." });
         break;
     }
-  } 
-   else if (err.status && err.msg) {
+  } else if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
-  } 
-  else if (err.errors) {
+  } else if (err.errors) {
     const message = err.errors.email.properties.message;
 
     res.status(400).send(message);
-  }
-   else
-    {
+  } else {
     next(err);
   }
 });

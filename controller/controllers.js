@@ -1,14 +1,10 @@
 const { usersModel, plantModel } = require("../model/models");
 const bcrypt = require("bcrypt");
-const endpoints = require('../endpoints.json')
-
+const endpoints = require("../endpoints.json");
 
 const getAllEndpoints = (req, res, next) => {
-
-  res.status(200).send({endpoints})
-
-}
-
+  res.status(200).send({ endpoints });
+};
 
 const registerUser = (req, res, next) => {
   const { username, name, email, password } = req.body;
@@ -244,6 +240,33 @@ const updateUsername = (req, res, next) => {
     });
 };
 
+const getPlant = (req, res, next) => {
+  const { username, plantId } = req.params;
+
+  usersModel
+    .findOne({ username })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("username not found");
+      }
+
+      plantModel
+        .findById(plantId)
+        .then((plant) => {
+          if (!plant) {
+            return res.status(404).send("Plant not found");
+          }
+          res.status(200).send({ plant });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -253,5 +276,6 @@ module.exports = {
   deletePlant,
   updatePlantNickname,
   updateUsername,
-  getAllEndpoints
+  getAllEndpoints,
+  getPlant,
 };

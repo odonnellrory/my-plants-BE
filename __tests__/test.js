@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const app = require("../index");
 const { seed } = require("../seed/seed");
 const { usersModel, plantModel } = require("../model/models");
-const endpoints = require('../endpoints.json')
+const endpoints = require("../endpoints.json");
 
 beforeAll(async () => {
   await mongoose.connect(
     "mongodb+srv://dbuser:admin001@plant-app.8jgjf.mongodb.net/plant-app"
   );
-  await seed();
+  // await seed();
 });
 
 afterAll(async () => {
@@ -17,19 +17,14 @@ afterAll(async () => {
 });
 
 describe("/api - All available endpoints", () => {
-
-
-
-    
   test("Returns 200 status code and description of all available endpoints", () => {
     return request(app)
-    .get('/api')
-    .expect(200)
-    .then(({body}) => {
-    
-    expect(body.endpoints).toEqual(endpoints)
-    })
-  })
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.endpoints).toEqual(endpoints);
+      });
+  });
 });
 
 describe("USERS", () => {
@@ -165,7 +160,6 @@ describe("USERS", () => {
       .get("/api/users/greenThumb")
       .expect(200)
       .then(({ body }) => {
-   
         expect(body.user).toEqual(
           expect.objectContaining({
             _id: expect.any(String),
@@ -217,7 +211,6 @@ describe("PLANTS", () => {
       .send(newPlant)
       .expect(201)
       .then(({ body }) => {
-      
         expect(body.plant).toEqual(
           expect.objectContaining({
             nickname: expect.any(String),
@@ -239,9 +232,7 @@ describe("PLANTS", () => {
         );
       });
   });
-});
 
-describe("PLANTS", () => {
   test("GET: Returns 200 status code with a list of plants by username.", () => {
     return request(app)
       .get("/api/users/plantLover1/plants")
@@ -378,7 +369,7 @@ describe("PATCH /api/users/:username/plants/:plant_id", () => {
       .patch("/api/users/nonexistentuser/plants/someplantid")
       .send({ nickname: "Nonexistent Nickname" })
       .expect(404);
-    
+
     expect(response.text).toBe("User not found");
   });
 
@@ -399,7 +390,6 @@ describe("PATCH /api/users/:currentUsername", () => {
       .send({ newUsername: "plantLover1Updated" })
       .expect(200)
       .then(({ body }) => {
-
         expect(body.message).toBe("Username updated successfully");
         expect(body.user.username).toBe("plantLover1Updated");
       });
