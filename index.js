@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
-
 const {
   registerUser,
   loginUser,
@@ -12,9 +10,17 @@ const {
   deletePlant,
   updatePlantNickname,
   updateUsername,
+  getAllEndpoints
 } = require("./controller/controllers.js");
+
+
+
+
 app.use(cors());
+
 app.use(express.json());
+
+app.get("/api", getAllEndpoints);
 
 app.post("/api/register", registerUser);
 
@@ -31,9 +37,9 @@ app.delete("/api/users/:username/plants/:plantId", deletePlant);
 app.patch("/api/users/:username/plants/:plantId", updatePlantNickname);
 
 app.patch("/api/users/:currentUsername", updateUsername);
-//delete
-//patch for watering dates
-//patch for username reward count
+
+
+
 
 //ERROR HANDLERS
 
@@ -52,13 +58,17 @@ app.use((err, req, res, next) => {
           .send({ msg: "A database error occurred. Please try again later." });
         break;
     }
-  } else if (err.status && err.msg) {
+  } 
+   else if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
-  } else if (err.errors) {
+  } 
+  else if (err.errors) {
     const message = err.errors.email.properties.message;
 
     res.status(400).send(message);
-  } else {
+  }
+   else
+    {
     next(err);
   }
 });
