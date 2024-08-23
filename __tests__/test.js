@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = require("../index");
 const { seed } = require("../seed/seed");
 const { usersModel, plantModel } = require("../model/models");
+const endpoints = require('../endpoints.json')
 
 beforeAll(async () => {
   await mongoose.connect(
@@ -13,6 +14,22 @@ beforeAll(async () => {
 
 afterAll(async () => {
   mongoose.connection.close();
+});
+
+describe("/api - All available endpoints", () => {
+
+
+
+    
+  test("Returns 200 status code and description of all available endpoints", () => {
+    return request(app)
+    .get('/api')
+    .expect(200)
+    .then(({body}) => {
+    
+    expect(body.endpoints).toEqual(endpoints)
+    })
+  })
 });
 
 describe("USERS", () => {
@@ -148,6 +165,7 @@ describe("USERS", () => {
       .get("/api/users/greenThumb")
       .expect(200)
       .then(({ body }) => {
+   
         expect(body.user).toEqual(
           expect.objectContaining({
             _id: expect.any(String),
@@ -203,6 +221,7 @@ describe("PLANTS", () => {
       .send(newplant)
       .expect(201)
       .then(({ body }) => {
+      
         expect(body.plant).toEqual(
           expect.objectContaining({
             common_name: expect.any(String),
@@ -388,7 +407,7 @@ describe("PATCH /api/users/:username/plants/:plant_id", () => {
       .patch("/api/users/nonexistentuser/plants/someplantid")
       .send({ nickname: "Nonexistent Nickname" })
       .expect(404);
-    console.log(response.text);
+    
     expect(response.text).toBe("User not found");
   });
 
@@ -409,6 +428,7 @@ describe("PATCH /api/users/:currentUsername", () => {
       .send({ newUsername: "plantLover1Updated" })
       .expect(200)
       .then(({ body }) => {
+
         expect(body.message).toBe("Username updated successfully");
         expect(body.user.username).toBe("plantLover1Updated");
       });
