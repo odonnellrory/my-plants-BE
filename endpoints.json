@@ -1,175 +1,189 @@
-
-
 {
-    "GET /api": {
-        "description": "serves up a json representation of all the endpoints available."
-    },
-    "POST /api/register": {
-        "description": "Registers a new user to the app",
-        "exampleResponse": {
-            "register": {
-                "username": "PlantQueen",
-                "name": "Margaret",
-                "email": "margaret@margaret.com",
-                "password": "iloveplants"
-            }
-        }  
-    },
-    "POST /api/login": {
-        "description": "Logs in an existing user with the valid login details",
-        "exampleResponse": {
-            "login": {
-
-                "username": "PlantQueen",
-                "password": "iloveplants"
-
-            }
-        }
-    },
-    "GET /api/users/:username": {
-        "description": "Serves object of user information",
-        "exampleResponse":{
-            "username": 
-            {
-                "_id": "66c864461d67a6f41cca12ef",
-                "username": "greenThumb",
-                "name": "Jane Smith",
-                "email": "janesmith@example.com",
-                "reward_points": 80,
-                "password": "$2b$10$wc.G5nuIJg0.n6vueHYXTunNc57KRyJI835AK5sgyb19hiDPNlp1C",
-                "profile_picture": "https://gravatar.com/avatar/14f0c1272b4b2cc4ce5c969725cc71a0?s=200&d=mp&r=x",
-                "plants": [ "66c864461d67a6f41cca12f7" ],
-                "created_at": "2024-08-23T10:28:22.230Z",
-               " __v": 1,
-                "plant_count": 1
-              }
-        }
-    },
-    "GET /api/user/:username/plants/:plant_id": {
-        "description": "Serves an object of a plant by plant_id",
-        "exampleResponse":{
-
-            "_id":{"$oid":"66c75452f458ebd5205261bd"},
-            "nickname":null,
-            "common_name":"Monstera",
-            "plant_origin":"Central America",
-            "scientific_name":["Monstera deliciosa"],
-            "type":"Indoor",
-            "cycle":"Perennial",
-            "description":"Monstera is known for its large, glossy, split leaves.",
-            "sunlight":"Bright, indirect light",
-            "watering":"Water when the top inch of soil is dry",
-            "depth_of_water":"Moderate",
-            "last_watered":{"$date":{"$numberLong":"1723939200000"}},
-            "next_watering":{"$date":{"$numberLong":"1724544000000"}},"watering_general_benchmark":{"min":"Weekly","max":"Biweekly"},
-            "watering_period":"Weekly",
-            "volume_water_requirement":{"min":"500ml","max":"1L"},
-            "pruning_month":["March","April"],
-            "pruning_count":{"times_per_year":{"$numberInt":"2"}},
-            "maintenance":"Low",
-            "growth_rate":"Moderate",
-            "img_ur":"https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
-            "date_added":{"$date":{"$numberLong":"1724339282479"}},
-            "__v":{"$numberInt":"0"}
-
-        }
-    },
-
-    "POST /api/users/:username/plants": {
-        "description": "User can add a plant",
-        "exampleResponse": {
-
-            
-                "nickname": null,
-                "common_name": "Monstera",
-                "plant_origin": "Central America",
-                "scientific_name": [ "Monstera deliciosa" ],
-                "type": "Indoor",
-                "cycle": "Perennial",
-                "description": "Monstera is known for its large, glossy, split leaves.",
-                "sunlight": "Bright, indirect light",
-                "watering": "Water when the top inch of soil is dry",
-                "depth_of_water": "Moderate",
-                "last_watered": "2024-08-18T00:00:00.000Z",
-                "next_watering": "2024-08-25T00:00:00.000Z",
-                "watering_general_benchmark": { "min": "Weekly", "max": "Biweekly" },
-                "watering_period": "Weekly",
-                "volume_water_requirement": { "min": "500ml", "max": "1L" },
-                "pruning_month": [ "March", "April" ],
-                "pruning_count": { "times_per_year": 2 },
-                "maintenance": "Low",
-                "growth_rate": "Moderate",
-                "img_ur": "https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
-                "_id": "66c862eadf16266131feb6cf",
-                "date_added": "2024-08-23T10:22:34.532Z",
-                "__v": 0
-              
-            
-        }
-    },
-
-    "DELETE /api/users/:username/plants/:plant_id": {
-        "description": "User can delete a plant",
-        "exampleResponse": {
-
-              "message": "Plant deleted successfully!"
-            
-
-        }
-    },
-
-    "PATCH /api/users/:username/plants/:plant_id": {
-        "description": "Users can add nickname to plant",
-        "exampleResponse": {
-
-
-            "nickname": "Bob",
-            "common_name": "Monstera",
-            "plant_origin": "Central America",
-            "scientific_name": [ "Monstera deliciosa" ],
-            "type": "Indoor",
-            "cycle": "Perennial",
-            "description": "Monstera is known for its large, glossy, split leaves.",
-            "sunlight": "Bright, indirect light",
-            "watering": "Water when the top inch of soil is dry",
-            "depth_of_water": "Moderate",
-            "last_watered": "2024-08-18T00:00:00.000Z",
-            "next_watering": "2024-08-25T00:00:00.000Z",
-            "watering_general_benchmark": { "min": "Weekly", "max": "Biweekly" },
-            "watering_period": "Weekly",
-            "volume_water_requirement": { "min": "500ml", "max": "1L" },
-            "pruning_month": [ "March", "April" ],
-            "pruning_count": { "times_per_year": 2 },
-            "maintenance": "Low",
-            "growth_rate": "Moderate",
-            "img_ur": "https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
-            "_id": "66c862eadf16266131feb6cf",
-            "date_added": "2024-08-23T10:22:34.532Z",
-            "__v": 0
-
-        }
-    },
-
-    "PATCH /api/users/:username": {
-        "description": "Users can change their username",
-        "exampleResponse": {
-
-                "_id": "66c864461d67a6f41cca12ef",
-                "username": "greenThumbelina",
-                "name": "Jane Smith",
-                "email": "janesmith@example.com",
-                "reward_points": 80,
-                "password": "$2b$10$wc.G5nuIJg0.n6vueHYXTunNc57KRyJI835AK5sgyb19hiDPNlp1C",
-                "profile_picture": "https://gravatar.com/avatar/14f0c1272b4b2cc4ce5c969725cc71a0?s=200&d=mp&r=x",
-                "plants": [ "66c864461d67a6f41cca12f7" ],
-                "created_at": "2024-08-23T10:28:22.230Z",
-               " __v": 1,
-                "plant_count": 1
-
-        }
+  "GET /api": {
+    "description": "serves up a json representation of all the endpoints available."
+  },
+  "POST /api/register": {
+    "description": "Registers a new user to the app",
+    "exampleResponse": {
+      "register": {
+        "username": "PlantQueen",
+        "name": "Margaret",
+        "email": "margaret@margaret.com",
+        "password": "iloveplants"
+      }
     }
+  },
+  "POST /api/login": {
+    "description": "Logs in an existing user with the valid login details",
+    "exampleResponse": {
+      "login": {
+        "username": "PlantQueen",
+        "password": "iloveplants"
+      }
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "Serves object of user information",
+    "exampleResponse": {
+      "username": {
+        "_id": "66c864461d67a6f41cca12ef",
+        "username": "greenThumb",
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "reward_points": 80,
+        "password": "$2b$10$wc.G5nuIJg0.n6vueHYXTunNc57KRyJI835AK5sgyb19hiDPNlp1C",
+        "profile_picture": "https://gravatar.com/avatar/14f0c1272b4b2cc4ce5c969725cc71a0?s=200&d=mp&r=x",
+        "plants": ["66c864461d67a6f41cca12f7"],
+        "created_at": "2024-08-23T10:28:22.230Z",
+        " __v": 1,
+        "plant_count": 1
+      }
+    }
+  },
+  "GET /api/user/:username/plants/:plant_id": {
+    "description": "Serves an object of a plant by plant_id",
+    "exampleResponse": {
+      "_id": "66cb2f37c14417e72dc08cf0",
+      "nickname": "",
+      "plant_location": "",
+      "common_name": "bamboo orchid",
+      "scientific_name": ["Arundina graminifolia"],
+      "origin": null,
+      "watering": "7",
+      "sunlight": "Part shade",
+      "description": "The bamboo orchid (Arundina graminifolia) is an amazing plant...",
+      "cycle": "Perennial",
+      "sunlight_care_guide": "Bamboo orchid (Arundina graminifolia) thrives best in...",
+      "watering_care_guide": "The bamboo orchid (Arundina graminifolia) prefers a relatively...",
+      "pruning_care_guide": "When Pruning: Bamboo orchids should be pruned when the blooms...",
+      "image_url": "https://perenual.com/storage/species_image/998_arundina_graminifolia/og/27347429227_11fd47bde8_b.jpg",
+      "last_watered": "2024-08-25T13:18:47.171Z",
+      "next_watering": "2024-09-01T13:18:46.574Z",
+      "date_added": "2024-08-25T13:18:47.171Z",
+      "__v": 0
+    }
+  },
+
+  "GET /api/users/:username/plants": {
+    "description": "returns an array on plants objects belong to the user",
+    "exampleResponse": [
+      {
+        "_id": "66cb2f37c14417e72dc08cf0",
+        "nickname": "",
+        "plant_location": "",
+        "common_name": "bamboo orchid",
+        "scientific_name": ["Arundina graminifolia"],
+        "origin": null,
+        "watering": "7",
+        "sunlight": "Part shade",
+        "description": "The bamboo orchid (Arundina graminifolia) is an amazing plant...",
+        "cycle": "Perennial",
+        "sunlight_care_guide": "Bamboo orchid (Arundina graminifolia) thrives best in...",
+        "watering_care_guide": "The bamboo orchid (Arundina graminifolia) prefers a relatively...",
+        "pruning_care_guide": "When Pruning: Bamboo orchids should be pruned when the blooms...",
+        "image_url": "https://perenual.com/storage/species_image/998_arundina_graminifolia/og/27347429227_11fd47bde8_b.jpg",
+        "last_watered": "2024-08-25T13:18:47.171Z",
+        "next_watering": "2024-09-01T13:18:46.574Z",
+        "date_added": "2024-08-25T13:18:47.171Z",
+        "__v": 0
+      },
+      {
+        "_id": "66cb2fdcc14417e72dc08cf8",
+        "nickname": "",
+        "plant_location": "",
+        "common_name": "Rose Marie Magnolia",
+        "scientific_name": ["Magnolia 'Rose Marie'"],
+        "origin": null,
+        "watering": "Minimum",
+        "sunlight": "full sun",
+        "description": "The Rose Marie Magnolia (Magnolia 'Rose Marie') is an incredible...",
+        "cycle": "Perennial",
+        "sunlight_care_guide": "Rose Marie Magnolia (Magnolia 'Rose Marie') does best ...",
+        "watering_care_guide": "Rose Marie Magnolia plants should be watered on a...",
+        "pruning_care_guide": "Rose Marie Magnolia should be pruned lightly in early spring...",
+        "image_url": "https://perenual.com/storage/species_image/334_magnolia_rose_marie/og/Magnolia_C397_soulangeana_BW_1.jpg",
+        "last_watered": "2024-08-25T13:21:32.474Z",
+        "next_watering": "2024-08-31T13:21:32.474Z",
+        "date_added": "2024-08-25T13:21:32.474Z",
+        "__v": 0
+      }
+    ]
+  },
+
+  "POST /api/users/:username/plants": {
+    "description": "posts a new plant to the users list and returns an object of the new plant",
+    "exampleResponse": {
+      "_id": "66cb2fdcc14417e72dc08cf8",
+      "nickname": "",
+      "plant_location": "",
+      "common_name": "Rose Marie Magnolia",
+      "scientific_name": ["Magnolia 'Rose Marie'"],
+      "origin": null,
+      "watering": "Minimum",
+      "sunlight": "full sun",
+      "description": "The Rose Marie Magnolia (Magnolia 'Rose Marie') is an incredible...",
+      "cycle": "Perennial",
+      "sunlight_care_guide": "Rose Marie Magnolia (Magnolia 'Rose Marie') does best ...",
+      "watering_care_guide": "Rose Marie Magnolia plants should be watered on a...",
+      "pruning_care_guide": "Rose Marie Magnolia should be pruned lightly in early spring...",
+      "image_url": "https://perenual.com/storage/species_image/334_magnolia_rose_marie/og/Magnolia_C397_soulangeana_BW_1.jpg",
+      "last_watered": "2024-08-25T13:21:32.474Z",
+      "next_watering": "2024-08-31T13:21:32.474Z",
+      "date_added": "2024-08-25T13:21:32.474Z",
+      "__v": 0
+    }
+  },
+
+  "DELETE /api/users/:username/plants/:plant_id": {
+    "description": "User can delete a plant",
+    "exampleResponse": {
+      "message": "Plant deleted successfully!"
+    }
+  },
+
+  "PATCH /api/users/:username/plants/:plant_id": {
+    "description": "Users can add nickname to plant",
+    "exampleResponse": {
+      "nickname": "Bob",
+      "common_name": "Monstera",
+      "plant_origin": "Central America",
+      "scientific_name": ["Monstera deliciosa"],
+      "type": "Indoor",
+      "cycle": "Perennial",
+      "description": "Monstera is known for its large, glossy, split leaves.",
+      "sunlight": "Bright, indirect light",
+      "watering": "Water when the top inch of soil is dry",
+      "depth_of_water": "Moderate",
+      "last_watered": "2024-08-18T00:00:00.000Z",
+      "next_watering": "2024-08-25T00:00:00.000Z",
+      "watering_general_benchmark": { "min": "Weekly", "max": "Biweekly" },
+      "watering_period": "Weekly",
+      "volume_water_requirement": { "min": "500ml", "max": "1L" },
+      "pruning_month": ["March", "April"],
+      "pruning_count": { "times_per_year": 2 },
+      "maintenance": "Low",
+      "growth_rate": "Moderate",
+      "img_ur": "https://img.freepik.com/free-vector/houseplant-brown-pot-nature-icon_24877-82849.jpg",
+      "_id": "66c862eadf16266131feb6cf",
+      "date_added": "2024-08-23T10:22:34.532Z",
+      "__v": 0
+    }
+  },
+
+  "PATCH /api/users/:username": {
+    "description": "Users can change their username",
+    "exampleResponse": {
+      "_id": "66c864461d67a6f41cca12ef",
+      "username": "greenThumbelina",
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "reward_points": 80,
+      "password": "$2b$10$wc.G5nuIJg0.n6vueHYXTunNc57KRyJI835AK5sgyb19hiDPNlp1C",
+      "profile_picture": "https://gravatar.com/avatar/14f0c1272b4b2cc4ce5c969725cc71a0?s=200&d=mp&r=x",
+      "plants": ["66c864461d67a6f41cca12f7"],
+      "created_at": "2024-08-23T10:28:22.230Z",
+      " __v": 1,
+      "plant_count": 1
+    }
+  }
 }
-
-
-
-
