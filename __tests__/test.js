@@ -257,7 +257,6 @@ describe("PLANTS", () => {
             pruning_care_guide: expect.any(String),
           })
         );
-
         expect(body.plants).toBeSorted({ descending: true });
       });
   });
@@ -487,5 +486,73 @@ describe("update the user reward point", () => {
 
     expect(response.status).toBe(400);
     expect(response.text).toBe("Bad request");
+  });
+});
+
+describe("PATCH /api/users/:username/plants/:plantId/graveyard", () => {
+  test("Successfully moves a plant to the graveyard", async () => {
+    const user = await usersModel.findOne({ username: "greenThumb" });
+
+    const plant = await plantModel.create({
+      common_name: "Cactus",
+      scientific_name: ["Cactaceae"],
+      origin: "Desert",
+      cycle: "Perennial",
+      description: "A resilient plant that thrives in arid conditions.",
+      sunlight: "Full sun",
+      watering: "Water sparingly",
+      sunlight_care_guide: "Place in direct sunlight",
+      watering_care_guide: "Water only when soil is completely dry",
+      pruning_care_guide: "Prune if it overgrows its space",
+    });
+
+    user.plants.push(plant._id);
+    await user.save();
+
+    const response = await request(app)
+      .patch(`/api/users/greenThumb/plants/${plant._id}/dead`)
+      .expect(200);
+
+    expect(response.body.message).toBe("Plant moved to the graveyard");
+
+    const updatedPlant = await plantModel.findById(plant._id);
+    expect(updatedPlant.is_dead).toBe(true);
+  });
+
+  test("Returns 404 if plant is not in user's collection", async () => {
+    const response = await request(app)
+      .patch("/api/users/plantLover1/plants/nonexistentplantid/dead")
+      .expect(404);
+
+    expect(response.body.message).toBe("Not Found");
+  });
+});
+
+describe("GET /api/users/:username/graveyard", () => {
+  test("Returns 200 status code and a list of plants in the graveyard", () => {
+    return request(app)
+      .get("/api/users/greenThumb/plants_graveyard")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body[0].is_dead).toBe(true);
+      });
+  });
+
+  test("Returns 404 if user is not found", () => {
+    return request(app)
+      .get("/api/users/nonexistentuser/plants_graveyard")
+      .expect(404)
+      .then((response) => {
+        expect(response.text).toBe("User not found");
+      });
+  });
+
+  test("Returns 200 with empty array if no plants are in the graveyard", () => {
+    return request(app)
+      .get("/api/users/botanicalBoss/plants_graveyard")
+      .expect(200)
+      .then((response) => {
+        expect(response.text).toEqual("No dead plants yet!");
+      });
   });
 });

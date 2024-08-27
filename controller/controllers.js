@@ -118,7 +118,11 @@ const getPlants = (req, res, next) => {
 
   usersModel
     .findOne({ username })
-    .populate({ path: "plants", options: { sort: { date_added: -1 } } })
+    .populate({
+      path: "plants",
+      options: { sort: { date_added: -1 } },
+      match: { is_dead: false },
+    })
     .then((user) => {
       if (!user) {
         return res.status(404).send("username not found");
@@ -331,6 +335,49 @@ const updateUserRewards = (req, res, next) => {
     });
 };
 
+const getGraveyardPlants = (req, res, next) => {
+  const { username } = req.params;
+
+  usersModel
+    .findOne({ username })
+    .populate({
+      path: "plants",
+      match: { is_dead: true },
+    })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      if (user.plants.length === 0) {
+        return res.status(200).send("No dead plants yet!");
+      }
+
+      res.status(200).send(user.plants);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+const markPlantAsDead = (req, res, next) => {
+  const { plantId } = req.params;
+
+  plantModel
+    .findByIdAndUpdate(plantId, { is_dead: true }, { new: true })
+    .then((updatedPlant) => {
+      if (!updatedPlant) {
+        return res.status(404).send({ message: "Plant not found!" });
+      }
+      res
+        .status(200)
+        .send({ plant: updatedPlant, message: "Plant moved to the graveyard" });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -344,4 +391,6 @@ module.exports = {
   getPlant,
   updateUserRewards,
   updatePlantWatering,
+  markPlantAsDead,
+  getGraveyardPlants,
 };

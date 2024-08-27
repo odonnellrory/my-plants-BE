@@ -14,6 +14,8 @@ const {
   getPlant,
   updatePlantWatering,
   updateUserRewards,
+  markPlantAsDead,
+  getGraveyardPlants,
 } = require("./controller/controllers.js");
 
 app.use(cors());
@@ -31,7 +33,7 @@ app.post("/api/users/:username/plants", addPlant);
 app.get("/api/users/:username/plants/:plantId", getPlant);
 
 app.get("/api/users/:username", getUserInfo);
-
+app.get("/api/users/:username/plants_graveyard", getGraveyardPlants);
 app.get("/api/users/:username/plants", getPlants);
 
 app.delete("/api/users/:username/plants/:plantId", deletePlant);
@@ -43,6 +45,8 @@ app.patch("/api/users/:currentUsername", updateUsername);
 app.patch("/api/users/:username/plants/:plantId/water", updatePlantWatering);
 
 app.patch("/api/users/:username/rewards", updateUserRewards);
+
+app.patch("/api/users/:username/plants/:plantId/dead", markPlantAsDead);
 
 //ERROR HANDLERS
 
@@ -67,6 +71,8 @@ app.use((err, req, res, next) => {
     const message = err.errors.email.properties.message;
 
     res.status(400).send(message);
+  } else if (err.kind === "ObjectId") {
+    res.status(404).send({ message: "Not Found" });
   } else {
     next(err);
   }
