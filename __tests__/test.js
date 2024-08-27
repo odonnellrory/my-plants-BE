@@ -6,10 +6,7 @@ const { usersModel, plantModel } = require("../model/models");
 const endpoints = require("../endpoints.json");
 
 beforeAll(async () => {
-  await mongoose.connect(
-    "mongodb+srv://dbuser:admin001@plant-app.8jgjf.mongodb.net/plant-app"
-  );
-  // await seed();
+  await seed();
 });
 
 afterAll(async () => {
@@ -442,5 +439,44 @@ describe("PATCH /api/users/:currentUsername", () => {
       username: "flowerFanaticUpdated",
     });
     expect(updatedUser.plants.length).toBe(originalPlantCount);
+  });
+});
+
+describe("update the user reward point", () => {
+  it("should update the user rewards successfully", () => {
+    const rewardUpdate = {
+      points: 100,
+    };
+
+    return request(app)
+      .patch("/api/users/botanicalBoss/rewards")
+      .send(rewardUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user).toEqual(
+          expect.objectContaining({
+            username: "botanicalBoss",
+            reward_points: 220,
+          })
+        );
+      });
+  });
+
+  test("should return 404 when user is not found", async () => {
+    const response = await request(app)
+      .patch("/api/users/nonexistentUser/rewards")
+      .send({ points: 20 });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe("User not found!");
+  });
+
+  test("should return 400 for bad request when points are not a number", async () => {
+    const response = await request(app)
+      .patch("/api/users/testUser1/rewards")
+      .send({ points: "invalid" });
+
+    expect(response.status).toBe(400);
+    expect(response.text).toBe("Bad request");
   });
 });
