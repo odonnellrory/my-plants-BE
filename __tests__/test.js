@@ -1,4 +1,6 @@
+require("jest-sorted");
 const request = require("supertest");
+
 const mongoose = require("mongoose");
 const app = require("../index");
 const { seed } = require("../seed/seed");
@@ -255,6 +257,8 @@ describe("PLANTS", () => {
             pruning_care_guide: expect.any(String),
           })
         );
+
+        expect(body.plants).toBeSorted({ descending: true });
       });
   });
 });
