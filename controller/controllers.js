@@ -240,33 +240,6 @@ const updateUsername = (req, res, next) => {
     });
 };
 
-const getPlant = (req, res, next) => {
-  const { username, plantId } = req.params;
-
-  usersModel
-    .findOne({ username })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send("username not found");
-      }
-
-      plantModel
-        .findById(plantId)
-        .then((plant) => {
-          if (!plant) {
-            return res.status(404).send("Plant not found");
-          }
-          res.status(200).send({ plant });
-        })
-        .catch((err) => {
-          next(err);
-        });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
 const updatePlantWatering = async (req, res, next) => {
   const { username, plantId } = req.params;
 
@@ -307,6 +280,55 @@ const updatePlantWatering = async (req, res, next) => {
     next(error);
   }
 };
+const getPlant = (req, res, next) => {
+  const { username, plantId } = req.params;
+
+  usersModel
+    .findOne({ username })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send("username not found");
+      }
+
+      plantModel
+        .findById(plantId)
+        .then((plant) => {
+          if (!plant) {
+            return res.status(404).send("Plant not found");
+          }
+          res.status(200).send({ plant });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const updateUserRewards = (req, res, next) => {
+  const { username } = req.params;
+  const { points } = req.body;
+  if (typeof points !== "number") {
+    return res.status(400).send("Bad request");
+  }
+  usersModel
+    .findOneAndUpdate(
+      { username: username },
+      { $inc: { reward_points: points } },
+      { new: true }
+    )
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).send({ message: "User not found!" });
+      }
+      res.status(200).send({ user: updatedUser });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
 
 module.exports = {
   registerUser,
@@ -319,5 +341,6 @@ module.exports = {
   updateUsername,
   getAllEndpoints,
   getPlant,
+  updateUserRewards,
   updatePlantWatering,
 };
