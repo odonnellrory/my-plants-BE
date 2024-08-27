@@ -12,6 +12,7 @@ const {
   updateUsername,
   getAllEndpoints,
   getPlant,
+  updatePlantWatering,
 } = require("./controller/controllers.js");
 
 app.use(cors());
@@ -37,6 +38,8 @@ app.delete("/api/users/:username/plants/:plantId", deletePlant);
 app.patch("/api/users/:username/plants/:plantId", updatePlantNickname);
 
 app.patch("/api/users/:currentUsername", updateUsername);
+
+app.patch("/api/users/:username/plants/:plantId/water", updatePlantWatering);
 
 //ERROR HANDLERS
 

@@ -267,6 +267,47 @@ const getPlant = (req, res, next) => {
     });
 };
 
+const updatePlantWatering = async (req, res, next) => {
+  const { username, plantId } = req.params;
+
+  try {
+    const [user, plant] = await Promise.all([
+      usersModel.findOne({ username }),
+      plantModel.findById(plantId),
+    ]);
+
+    if (!user || !plant) {
+      return res.status(404).send(`${!user ? "User" : "Plant"} not found`);
+    }
+
+    const currentDate = new Date();
+    plant.last_watered = currentDate;
+
+    let wateringDays;
+    if (plant.watering === "Frequent") {
+      wateringDays = 3;
+    } else if (plant.watering === "Average") {
+      wateringDays = 7;
+    } else if (plant.watering === "Minimum") {
+      wateringDays = 10;
+    } else {
+      wateringDays = parseInt(plant.watering) || 7;
+    }
+
+    plant.next_watering = new Date(
+      currentDate.setDate(currentDate.getDate() + wateringDays)
+    );
+
+    await plant.save();
+
+    res
+      .status(200)
+      .json({ message: "Plant watering updated successfully", plant });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -278,4 +319,5 @@ module.exports = {
   updateUsername,
   getAllEndpoints,
   getPlant,
+  updatePlantWatering,
 };
