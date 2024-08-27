@@ -46,6 +46,7 @@ const plantSchema = new mongoose.Schema(
     date_added: { type: Date, default: Date.now },
     last_watered: { type: Date, default: Date.now },
     next_watering: { type: Date },
+    is_dead: { type: Boolean, default: false },
   },
   { strict: true }
 );
