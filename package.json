@@ -4,8 +4,8 @@
   "description": "",
   "main": "listen.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --watch",
-    "start": "NODE_ENV=production node listen.js"
+    "test": "jest --watch",
+    "start": "node listen.js"
   },
   "keywords": [],
   "author": "",

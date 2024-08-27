@@ -12,7 +12,6 @@ const {
   updateUsername,
   getAllEndpoints,
   getPlant,
-  updateUserRewards,
 } = require("./controller/controllers.js");
 
 app.use(cors());
@@ -36,8 +35,8 @@ app.get("/api/users/:username/plants", getPlants);
 app.delete("/api/users/:username/plants/:plantId", deletePlant);
 
 app.patch("/api/users/:username/plants/:plantId", updatePlantNickname);
+
 app.patch("/api/users/:currentUsername", updateUsername);
-app.patch("/api/users/:username/rewards", updateUserRewards);
 
 //ERROR HANDLERS
 
