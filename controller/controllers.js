@@ -267,9 +267,9 @@ const updatePlantWatering = async (req, res, next) => {
       wateringDays = parseInt(plant.watering) || 7;
     }
 
-    plant.next_watering = new Date(
-      currentDate.setDate(currentDate.getDate() + wateringDays)
-    );
+    const nextWateringDate = new Date(currentDate);
+    nextWateringDate.setDate(nextWateringDate.getDate() + wateringDays);
+    plant.next_watering = nextWateringDate;
 
     await plant.save();
 
@@ -280,6 +280,7 @@ const updatePlantWatering = async (req, res, next) => {
     next(error);
   }
 };
+
 const getPlant = (req, res, next) => {
   const { username, plantId } = req.params;
 
