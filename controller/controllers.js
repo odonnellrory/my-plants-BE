@@ -118,7 +118,7 @@ const getPlants = (req, res, next) => {
 
   usersModel
     .findOne({ username })
-    .populate("plants")
+    .populate({ path: "plants", options: { sort: { date_added: -1 } } })
     .then((user) => {
       if (!user) {
         return res.status(404).send("username not found");
