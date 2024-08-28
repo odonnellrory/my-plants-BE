@@ -536,7 +536,7 @@ describe("GET /api/users/:username/graveyard", () => {
       .get("/api/users/greenThumb/plants_graveyard")
       .expect(200)
       .then(({ body }) => {
-        expect(body[0].is_dead).toBe(true);
+        expect(body.plants[0].is_dead).toBe(true);
       });
   });
 
@@ -554,7 +554,7 @@ describe("GET /api/users/:username/graveyard", () => {
       .get("/api/users/botanicalBoss/plants_graveyard")
       .expect(200)
       .then((response) => {
-        expect(response.text).toEqual("No dead plants yet!");
+        expect(response.body.plants).toEqual([]);
       });
   });
 });

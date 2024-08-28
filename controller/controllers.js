@@ -350,10 +350,10 @@ const getGraveyardPlants = (req, res, next) => {
       }
 
       if (user.plants.length === 0) {
-        return res.status(200).send("No dead plants yet!");
+        return res.status(200).send({ plants: [] });
       }
 
-      res.status(200).send(user.plants);
+      res.status(200).send({ plants: user.plants });
     })
     .catch((error) => {
       next(error);
