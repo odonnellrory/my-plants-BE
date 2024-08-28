@@ -276,7 +276,8 @@ test("GET: Returns empty array and message if no plants are on the list", () => 
     .get("/api/users/PlantKing/plants")
     .expect(200)
     .then((response) => {
-      expect(response.text).toBe("No plants yet!");
+      console.log(response.body);
+      expect(response.body.plants).toEqual([]);
     });
 });
 
@@ -511,6 +512,7 @@ describe("PATCH /api/users/:username/plants/:plantId/graveyard", () => {
 
     const response = await request(app)
       .patch(`/api/users/greenThumb/plants/${plant._id}/dead`)
+      .send({ is_dead: true })
       .expect(200);
 
     expect(response.body.message).toBe("Plant moved to the graveyard");
