@@ -129,7 +129,7 @@ const getPlants = (req, res, next) => {
       }
 
       if (user.plants.length === 0) {
-        return res.status(200).send("No plants yet!");
+        return res.status(200).send({ plants: [] });
       }
 
       res.status(200).send({ plants: user.plants });
@@ -197,11 +197,7 @@ const updatePlantNickname = (req, res, next) => {
         return res.status(404).send("User not found");
       }
 
-      return plantModel.findByIdAndUpdate(
-        plantId,
-        { nickname: nickname },
-        { new: true }
-      );
+      return plantModel.findByIdAndUpdate(plantId, { nickname: nickname }, { new: true });
     })
     .then((plant) => {
       if (!plant) {
@@ -225,19 +221,13 @@ const updateUsername = (req, res, next) => {
       }
 
       // Find and update the user
-      return usersModel.findOneAndUpdate(
-        { username: currentUsername },
-        { username: newUsername },
-        { new: true }
-      );
+      return usersModel.findOneAndUpdate({ username: currentUsername }, { username: newUsername }, { new: true });
     })
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(404).send({ message: "User not found" });
       }
-      res
-        .status(200)
-        .send({ message: "Username updated successfully", user: updatedUser });
+      res.status(200).send({ message: "Username updated successfully", user: updatedUser });
     })
     .catch((error) => {
       next(error);
@@ -248,10 +238,7 @@ const updatePlantWatering = async (req, res, next) => {
   const { username, plantId } = req.params;
 
   try {
-    const [user, plant] = await Promise.all([
-      usersModel.findOne({ username }),
-      plantModel.findById(plantId),
-    ]);
+    const [user, plant] = await Promise.all([usersModel.findOne({ username }), plantModel.findById(plantId)]);
 
     if (!user || !plant) {
       return res.status(404).send(`${!user ? "User" : "Plant"} not found`);
@@ -277,9 +264,7 @@ const updatePlantWatering = async (req, res, next) => {
 
     await plant.save();
 
-    res
-      .status(200)
-      .json({ message: "Plant watering updated successfully", plant });
+    res.status(200).json({ message: "Plant watering updated successfully", plant });
   } catch (error) {
     next(error);
   }
@@ -319,11 +304,7 @@ const updateUserRewards = (req, res, next) => {
     return res.status(400).send("Bad request");
   }
   usersModel
-    .findOneAndUpdate(
-      { username: username },
-      { $inc: { reward_points: points } },
-      { new: true }
-    )
+    .findOneAndUpdate({ username: username }, { $inc: { reward_points: points } }, { new: true })
     .then((updatedUser) => {
       if (!updatedUser) {
         return res.status(404).send({ message: "User not found!" });
@@ -369,9 +350,7 @@ const markPlantAsDead = (req, res, next) => {
       if (!updatedPlant) {
         return res.status(404).send({ message: "Plant not found!" });
       }
-      res
-        .status(200)
-        .send({ plant: updatedPlant, message: "Plant moved to the graveyard" });
+      res.status(200).send({ plant: updatedPlant, message: "Plant moved to the graveyard" });
     })
     .catch((error) => {
       next(error);
