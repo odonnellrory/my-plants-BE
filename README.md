@@ -14,11 +14,17 @@ INSTRUCTIONS ON LOCAL USE
 
 - To clone this repo on your local machine use the following link:
 
-https://github.com/odonnellrory/my-plants-BE
+## HTTPS:
+
+    git clone https://github.com/odonnellrory/my-plants-BE.git
+
+## SSH:
+
+    git clone git@github.com:odonnellrory/my-plants-BE.git
 
 - To download the dependencies run the following command in the terminal:
 
-npm install
+  npm install
 
 RUNNING TESTS
 
