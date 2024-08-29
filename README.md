@@ -117,3 +117,5 @@ These include:
 - 404 error messages both with generic and specific messages if the request cannot be found.
 - 409 error messages for when trying to create or update a resource that already exists or has conflicting information.
 - 500 error message should the instance occur that there is a system issue.
+
+### Acknowledgements
